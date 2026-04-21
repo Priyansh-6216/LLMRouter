@@ -1,0 +1,51 @@
+# Git ignore for LLMRouter
+
+# Environment
+.env
+*.env.local
+
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# IDE
+.idea/
+*.iml
+.eclipse/
+.settings/
+.project
+.classpath
+*.swp
+*.swo
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Docker volumes (local)
+docker/data/
+
+# Python (adapter service)
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.python-version
+dist/
+*.egg-info/
+
+# Node (if any tooling)
+node_modules/
+npm-debug.log*

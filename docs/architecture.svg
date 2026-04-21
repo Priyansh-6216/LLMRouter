@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 980" width="1100" height="980">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#161b22"/>
+    </linearGradient>
+    <linearGradient id="blueGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="purpleGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+    <linearGradient id="tealGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d9488"/>
+      <stop offset="100%" stop-color="#2dd4bf"/>
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c2410c"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#15803d"/>
+      <stop offset="100%" stop-color="#4ade80"/>
+    </linearGradient>
+    <linearGradient id="indigoGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4338ca"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+    <linearGradient id="yellowGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a16207"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6"/>
+    </marker>
+    <marker id="arrowGray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+    </marker>
+    <marker id="arrowYellow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#fbbf24"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="980" fill="url(#bgGrad)"/>
+
+  <!-- Title -->
+  <text x="550" y="40" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="26" font-weight="bold" fill="#f0f6ff">LLMRouter — System Architecture</text>
+  <text x="550" y="62" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#8b949e">Multi-model AI Gateway · Spring Boot · Redis · Kafka · PostgreSQL</text>
+
+  <!-- LAYER 1: Clients -->
+  <rect x="350" y="85" width="400" height="60" rx="10" fill="url(#blueGrad)" filter="url(#shadow)"/>
+  <text x="550" y="111" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="bold" fill="white">Clients / Applications</text>
+  <text x="550" y="133" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#bfdbfe">REST · Streaming (SSE) · Internal Services · SDKs</text>
+
+  <!-- Arrow 1-->
+  <line x1="550" y1="145" x2="550" y2="172" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- LAYER 2: API Gateway -->
+  <rect x="200" y="175" width="700" height="80" rx="10" fill="url(#purpleGrad)" filter="url(#shadow)"/>
+  <text x="550" y="202" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="15" font-weight="bold" fill="white">API Gateway Layer (Spring Boot)</text>
+  <text x="550" y="223" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#ede9fe">Auth &amp; JWT · Rate Limiting · Tenant Policy · Request Normalization · Payload Validation</text>
+  <text x="550" y="242" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#ede9fe">POST /v1/generate · POST /v1/generate/stream · GET /v1/providers/health</text>
+
+  <!-- Arrow 2-->
+  <line x1="420" y1="255" x2="340" y2="290" stroke="#6b7280" stroke-width="2" marker-end="url(#arrowGray)"/>
+  <line x1="680" y1="255" x2="760" y2="290" stroke="#6b7280" stroke-width="2" marker-end="url(#arrowGray)"/>
+
+  <!-- LAYER 3a: Routing Engine -->
+  <rect x="80" y="293" width="370" height="110" rx="10" fill="url(#tealGrad)" filter="url(#shadow)"/>
+  <text x="265" y="318" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="bold" fill="white">Routing Engine</text>
+  <text x="265" y="338" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#ccfbf1">Policy Evaluator · Cost Estimator</text>
+  <text x="265" y="356" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#ccfbf1">Token Estimator · Health/Latency Selector</text>
+  <text x="265" y="374" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#ccfbf1">Policies: Cheapest · Fastest · Balanced · Privacy · Resilient</text>
+  <text x="265" y="392" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#ccfbf1">Fallback Planner · Circuit Breaker (Resilience4j)</text>
+
+  <!-- LAYER 3b: Cache Layer -->
+  <rect x="650" y="293" width="370" height="110" rx="10" fill="url(#orangeGrad)" filter="url(#shadow)"/>
+  <text x="835" y="318" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="bold" fill="white">Cache Layer (Redis)</text>
+  <text x="835" y="338" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#ffedd5">Semantic-safe response caching</text>
+  <text x="835" y="356" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#ffedd5">Key: hash(prompt + task + schema + policy)</text>
+  <text x="835" y="374" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#ffedd5">TTL: 1h–24h per task type</text>
+  <text x="835" y="392" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#ffedd5">Cache hit → skip provider → immediate return</text>
+
+  <!-- Arrow from routing to providers -->
+  <line x1="265" y1="403" x2="265" y2="445" stroke="#6b7280" stroke-width="2" marker-end="url(#arrowGray)"/>
+  <line x1="550" y1="255" x2="550" y2="445" stroke="#6b7280" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrowGray)"/>
+
+  <!-- LAYER 4: Provider Adapters -->
+  <rect x="80" y="448" width="700" height="105" rx="10" fill="url(#greenGrad)" filter="url(#shadow)"/>
+  <text x="430" y="473" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="bold" fill="white">Provider Adapter Layer</text>
+  <!-- OpenAI box -->
+  <rect x="100" y="483" width="200" height="55" rx="7" fill="rgba(0,0,0,0.3)"/>
+  <text x="200" y="506" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="bold" fill="white">OpenAI Adapter</text>
+  <text x="200" y="524" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#bbf7d0">Responses API · Streaming</text>
+  <!-- Anthropic box -->
+  <rect x="320" y="483" width="200" height="55" rx="7" fill="rgba(0,0,0,0.3)"/>
+  <text x="420" y="506" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="bold" fill="white">Anthropic Adapter</text>
+  <text x="420" y="524" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#bbf7d0">Messages · Token Counting · Caching</text>
+  <!-- vLLM box -->
+  <rect x="540" y="483" width="200" height="55" rx="7" fill="rgba(0,0,0,0.3)"/>
+  <text x="640" y="506" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="bold" fill="white">vLLM Adapter</text>
+  <text x="640" y="524" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#bbf7d0">OpenAI-compatible · Local / Self-hosted</text>
+
+  <!-- Arrow to streaming -->
+  <line x1="430" y1="553" x2="430" y2="585" stroke="#6b7280" stroke-width="2" marker-end="url(#arrowGray)"/>
+
+  <!-- LAYER 5: Streaming Aggregator -->
+  <rect x="200" y="588" width="460" height="60" rx="10" fill="url(#indigoGrad)" filter="url(#shadow)"/>
+  <text x="430" y="614" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="bold" fill="white">Streaming Aggregator</text>
+  <text x="430" y="634" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#e0e7ff">SSE Proxy · Chunk Assembly · Token Count Normalization · Finish Reason</text>
+
+  <!-- Arrow to Kafka -->
+  <line x1="430" y1="648" x2="430" y2="678" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowYellow)"/>
+  <text x="480" y="668" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#fbbf24">Async Events</text>
+
+  <!-- LAYER 6: Kafka -->
+  <rect x="100" y="681" width="660" height="80" rx="10" fill="url(#yellowGrad)" filter="url(#shadow)"/>
+  <text x="430" y="705" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="14" font-weight="bold" fill="#1c1917">Kafka Event Bus</text>
+  <text x="430" y="725" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#1c1917">llm.requests.started · llm.requests.completed · llm.requests.failed</text>
+  <text x="430" y="743" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#1c1917">llm.fallback.triggered · llm.cache.hit · llm.cache.miss · llm.provider.health</text>
+
+  <!-- Arrows to consumers -->
+  <line x1="210" y1="761" x2="185" y2="800" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowYellow)"/>
+  <line x1="430" y1="761" x2="430" y2="800" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowYellow)"/>
+  <line x1="650" y1="761" x2="675" y2="800" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowYellow)"/>
+
+  <!-- LAYER 7: Consumers -->
+  <!-- Analytics -->
+  <rect x="60" y="803" width="240" height="80" rx="10" fill="#1e3a5f" filter="url(#shadow)" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="180" y="828" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="bold" fill="white">Analytics Consumer</text>
+  <text x="180" y="847" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#93c5fd">Requests · Latency · Model Stats</text>
+  <text x="180" y="865" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#3b82f6">→ PostgreSQL</text>
+
+  <!-- Cost -->
+  <rect x="310" y="803" width="240" height="80" rx="10" fill="#1a3a28" filter="url(#shadow)" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="430" y="828" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="bold" fill="white">Cost Consumer</text>
+  <text x="430" y="847" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#86efac">Token Usage · Cost per Request</text>
+  <text x="430" y="865" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#4ade80">→ PostgreSQL · Billing DB</text>
+
+  <!-- Alerting -->
+  <rect x="560" y="803" width="240" height="80" rx="10" fill="#3b1c1c" filter="url(#shadow)" stroke="#f87171" stroke-width="1.5"/>
+  <text x="680" y="828" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="bold" fill="white">Alert Consumer</text>
+  <text x="680" y="847" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#fca5a5">Error Rates · SLA Violations</text>
+  <text x="680" y="865" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#f87171">→ PagerDuty · Slack · Prometheus</text>
+
+  <!-- Observability note -->
+  <rect x="820" y="450" width="240" height="130" rx="10" fill="#1e2433" stroke="#475569" stroke-width="1.5"/>
+  <text x="940" y="473" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="bold" fill="#94a3b8">Observability</text>
+  <text x="940" y="495" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#64748b">OpenTelemetry Traces</text>
+  <text x="940" y="513" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#64748b">Prometheus Metrics</text>
+  <text x="940" y="531" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#64748b">Grafana Dashboards</text>
+  <text x="940" y="549" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#64748b">p95 Latency · Error Rate</text>
+  <text x="940" y="567" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="10.5" fill="#64748b">RPM · TPM · Cost/hr</text>
+
+  <!-- Footer -->
+  <text x="550" y="950" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#30363d">LLMRouter © 2025 · github.com/Priyansh-6216/LLMRouter · Java 21 + Spring Boot 3 + Redis + Kafka + PostgreSQL</text>
+</svg>
