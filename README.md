@@ -302,7 +302,7 @@ POST /v1/policies/route-preview
 ### ✅ MVP (Days 1–10)
 - [x] Day 1: Repo structure, README, architecture diagram
 - [x] Day 2: Spring Boot project, DTOs, `/v1/generate` stub
-- [ ] Day 3: OpenAI adapter
+- [x] Day 3: OpenAI adapter
 - [ ] Day 4: Anthropic adapter
 - [ ] Day 5: vLLM adapter
 - [ ] Day 6: Routing engine + policy scoring
