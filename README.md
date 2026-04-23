@@ -303,7 +303,7 @@ POST /v1/policies/route-preview
 - [x] Day 1: Repo structure, README, architecture diagram
 - [x] Day 2: Spring Boot project, DTOs, `/v1/generate` stub
 - [x] Day 3: OpenAI adapter
-- [ ] Day 4: Anthropic adapter
+- [x] Day 4: Anthropic adapter
 - [ ] Day 5: vLLM adapter
 - [ ] Day 6: Routing engine + policy scoring
 - [ ] Day 7: Redis cache + cache metrics
