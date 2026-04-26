@@ -23,15 +23,14 @@ public class GenerateController {
 
     @PostMapping("/generate")
     public Mono<ResponseEntity<GenerateResponse>> generate(
-            @RequestHeader("Authorization") String authorization,
+            @RequestHeader(value = "Authorization", required = false) String authorization,
+            @RequestHeader(value = "X-Provider", defaultValue = "openai") String provider,
             @RequestBody GenerateRequest request) {
         
-        // For Day 3, we just find the OpenAI adapter (or any available) and use it.
-        // Later, the Routing Engine will determine which adapter to use based on policies.
         ProviderAdapter adapter = adapters.stream()
-                .filter(a -> a.providerName().equals("openai"))
+                .filter(a -> a.providerName().equalsIgnoreCase(provider))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("OpenAI adapter not found"));
+                .orElseThrow(() -> new RuntimeException("Provider adapter not found: " + provider));
 
         return adapter.generate(request)
                 .map(ResponseEntity::ok);
@@ -39,13 +38,14 @@ public class GenerateController {
 
     @PostMapping(value = "/generate/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> generateStream(
-            @RequestHeader("Authorization") String authorization,
+            @RequestHeader(value = "Authorization", required = false) String authorization,
+            @RequestHeader(value = "X-Provider", defaultValue = "openai") String provider,
             @RequestBody GenerateRequest request) {
 
         ProviderAdapter adapter = adapters.stream()
-                .filter(a -> a.providerName().equals("openai"))
+                .filter(a -> a.providerName().equalsIgnoreCase(provider))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("OpenAI adapter not found"));
+                .orElseThrow(() -> new RuntimeException("Provider adapter not found: " + provider));
 
         return adapter.generateStream(request);
     }
