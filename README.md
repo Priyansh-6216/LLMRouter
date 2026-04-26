@@ -304,7 +304,7 @@ POST /v1/policies/route-preview
 - [x] Day 2: Spring Boot project, DTOs, `/v1/generate` stub
 - [x] Day 3: OpenAI adapter
 - [x] Day 4: Anthropic adapter
-- [ ] Day 5: vLLM adapter
+- [x] Day 5: vLLM adapter
 - [ ] Day 6: Routing engine + policy scoring
 - [ ] Day 7: Redis cache + cache metrics
 - [ ] Day 8: Fallback + circuit breaker + health checks
