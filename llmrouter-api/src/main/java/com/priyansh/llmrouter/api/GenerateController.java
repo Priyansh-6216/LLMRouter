@@ -20,13 +20,16 @@ import java.util.List;
 public class GenerateController {
 
     private final List<ProviderAdapter> adapters;
+    private final com.priyansh.llmrouter.routing.RoutingEngine routingEngine;
 
     @PostMapping("/generate")
     public Mono<ResponseEntity<GenerateResponse>> generate(
             @RequestHeader(value = "Authorization", required = false) String authorization,
-            @RequestHeader(value = "X-Provider", defaultValue = "openai") String provider,
             @RequestBody GenerateRequest request) {
         
+        com.priyansh.llmrouter.routing.RoutingEngine.RoutingDecision decision = routingEngine.selectRoute(request);
+        String provider = decision.getSelectedModel().getProviderName();
+
         ProviderAdapter adapter = adapters.stream()
                 .filter(a -> a.providerName().equalsIgnoreCase(provider))
                 .findFirst()
@@ -39,8 +42,10 @@ public class GenerateController {
     @PostMapping(value = "/generate/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> generateStream(
             @RequestHeader(value = "Authorization", required = false) String authorization,
-            @RequestHeader(value = "X-Provider", defaultValue = "openai") String provider,
             @RequestBody GenerateRequest request) {
+
+        com.priyansh.llmrouter.routing.RoutingEngine.RoutingDecision decision = routingEngine.selectRoute(request);
+        String provider = decision.getSelectedModel().getProviderName();
 
         ProviderAdapter adapter = adapters.stream()
                 .filter(a -> a.providerName().equalsIgnoreCase(provider))
