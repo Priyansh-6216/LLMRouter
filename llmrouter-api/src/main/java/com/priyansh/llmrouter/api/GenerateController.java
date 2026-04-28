@@ -21,22 +21,28 @@ public class GenerateController {
 
     private final List<ProviderAdapter> adapters;
     private final com.priyansh.llmrouter.routing.RoutingEngine routingEngine;
+    private final com.priyansh.llmrouter.cache.LlmCacheService cacheService;
 
     @PostMapping("/generate")
     public Mono<ResponseEntity<GenerateResponse>> generate(
             @RequestHeader(value = "Authorization", required = false) String authorization,
             @RequestBody GenerateRequest request) {
         
-        com.priyansh.llmrouter.routing.RoutingEngine.RoutingDecision decision = routingEngine.selectRoute(request);
-        String provider = decision.getSelectedModel().getProviderName();
+        return cacheService.getCachedResponse(request)
+                .map(ResponseEntity::ok)
+                .switchIfEmpty(Mono.defer(() -> {
+                    com.priyansh.llmrouter.routing.RoutingEngine.RoutingDecision decision = routingEngine.selectRoute(request);
+                    String provider = decision.getSelectedModel().getProviderName();
 
-        ProviderAdapter adapter = adapters.stream()
-                .filter(a -> a.providerName().equalsIgnoreCase(provider))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Provider adapter not found: " + provider));
+                    ProviderAdapter adapter = adapters.stream()
+                            .filter(a -> a.providerName().equalsIgnoreCase(provider))
+                            .findFirst()
+                            .orElseThrow(() -> new RuntimeException("Provider adapter not found: " + provider));
 
-        return adapter.generate(request)
-                .map(ResponseEntity::ok);
+                    return adapter.generate(request)
+                            .flatMap(res -> cacheService.cacheResponse(request, res).thenReturn(res))
+                            .map(ResponseEntity::ok);
+                }));
     }
 
     @PostMapping(value = "/generate/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)

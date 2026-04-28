@@ -306,7 +306,7 @@ POST /v1/policies/route-preview
 - [x] Day 4: Anthropic adapter
 - [x] Day 5: vLLM adapter
 - [x] Day 6: Routing engine + policy scoring
-- [ ] Day 7: Redis cache + cache metrics
+- [x] Day 7: Redis cache + cache metrics
 - [ ] Day 8: Fallback + circuit breaker + health checks
 - [ ] Day 9: Kafka events + PostgreSQL analytics
 - [ ] Day 10: Streaming endpoint + demo video + polished README
