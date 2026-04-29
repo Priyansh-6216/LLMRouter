@@ -80,4 +80,35 @@ public class ProviderRegistry {
         return metrics.getOrDefault(modelId, ProviderMetrics.builder()
                 .isHealthy(true).p95LatencyMs(1000.0).successRate(1.0).build());
     }
+
+    public void disableProvider(String providerName) {
+        metrics.values().stream()
+                .filter(m -> m.getProviderName().equalsIgnoreCase(providerName))
+                .forEach(m -> m.setIsHealthy(false));
+    }
+
+    public void enableProvider(String providerName) {
+        metrics.values().stream()
+                .filter(m -> m.getProviderName().equalsIgnoreCase(providerName))
+                .forEach(m -> m.setIsHealthy(true));
+    }
+
+    public void updateMetrics(String modelId, double latencyMs, boolean success) {
+        ProviderMetrics current = metrics.get(modelId);
+        if (current != null) {
+            // Simple moving average (alpha = 0.2)
+            double alpha = 0.2;
+            double newLatency = (current.getP95LatencyMs() * (1 - alpha)) + (latencyMs * alpha);
+            double currentSuccess = current.getSuccessRate();
+            double newSuccess = (currentSuccess * (1 - alpha)) + ((success ? 1.0 : 0.0) * alpha);
+            
+            current.setP95LatencyMs(newLatency);
+            current.setSuccessRate(newSuccess);
+            log.debug("Updated metrics for {}: latency={}ms, successRate={}", modelId, newLatency, newSuccess);
+        }
+    }
+
+    public List<ProviderMetrics> getAllMetrics() {
+        return new ArrayList<>(metrics.values());
+    }
 }

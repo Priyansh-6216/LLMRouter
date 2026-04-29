@@ -19,9 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GenerateController {
 
-    private final List<ProviderAdapter> adapters;
     private final com.priyansh.llmrouter.routing.RoutingEngine routingEngine;
     private final com.priyansh.llmrouter.cache.LlmCacheService cacheService;
+    private final ExecutionService executionService;
 
     @PostMapping("/generate")
     public Mono<ResponseEntity<GenerateResponse>> generate(
@@ -32,14 +32,8 @@ public class GenerateController {
                 .map(ResponseEntity::ok)
                 .switchIfEmpty(Mono.defer(() -> {
                     com.priyansh.llmrouter.routing.RoutingEngine.RoutingDecision decision = routingEngine.selectRoute(request);
-                    String provider = decision.getSelectedModel().getProviderName();
-
-                    ProviderAdapter adapter = adapters.stream()
-                            .filter(a -> a.providerName().equalsIgnoreCase(provider))
-                            .findFirst()
-                            .orElseThrow(() -> new RuntimeException("Provider adapter not found: " + provider));
-
-                    return adapter.generate(request)
+                    
+                    return executionService.executeWithFallback(request, decision)
                             .flatMap(res -> cacheService.cacheResponse(request, res).thenReturn(res))
                             .map(ResponseEntity::ok);
                 }));
@@ -51,13 +45,6 @@ public class GenerateController {
             @RequestBody GenerateRequest request) {
 
         com.priyansh.llmrouter.routing.RoutingEngine.RoutingDecision decision = routingEngine.selectRoute(request);
-        String provider = decision.getSelectedModel().getProviderName();
-
-        ProviderAdapter adapter = adapters.stream()
-                .filter(a -> a.providerName().equalsIgnoreCase(provider))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Provider adapter not found: " + provider));
-
-        return adapter.generateStream(request);
+        return executionService.executeStreamWithFallback(request, decision);
     }
 }

@@ -133,4 +133,17 @@ public class VllmAdapter implements ProviderAdapter {
                 .output(Map.of("text", text))
                 .build();
     }
+
+    @Override
+    public Mono<Boolean> checkHealth() {
+        return vllmWebClient.get()
+                .uri("/health")
+                .retrieve()
+                .toBodilessEntity()
+                .map(entity -> entity.getStatusCode().is2xxSuccessful())
+                .onErrorResume(e -> {
+                    log.warn("vLLM health check failed: {}", e.getMessage());
+                    return Mono.just(false);
+                });
+    }
 }

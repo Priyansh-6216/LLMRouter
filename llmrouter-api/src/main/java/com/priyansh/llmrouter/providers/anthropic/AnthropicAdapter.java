@@ -159,4 +159,20 @@ public class AnthropicAdapter implements ProviderAdapter {
         // claude-3-haiku placeholder cost
         return (inputTokens * 0.25 / 1000000.0) + (outputTokens * 1.25 / 1000000.0);
     }
+
+    @Override
+    public Mono<Boolean> checkHealth() {
+        // Anthropic doesn't have a simple GET health endpoint, so we just check connectivity
+        return anthropicWebClient.get()
+                .uri("/")
+                .retrieve()
+                .toBodilessEntity()
+                .map(entity -> true)
+                .onErrorResume(e -> {
+                    // 404 is fine (it means the service is up but the path is wrong)
+                    // Connection refused/timeout is what we care about
+                    log.warn("Anthropic health check failed (expected for root): {}", e.getMessage());
+                    return Mono.just(!e.getMessage().contains("Connection refused") && !e.getMessage().contains("Timeout"));
+                });
+    }
 }

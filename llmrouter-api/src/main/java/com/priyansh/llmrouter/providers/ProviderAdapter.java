@@ -21,4 +21,9 @@ public interface ProviderAdapter {
      * Execute a streaming inference request.
      */
     Flux<String> generateStream(GenerateRequest request);
+
+    /**
+     * Check if the provider is healthy and reachable.
+     */
+    Mono<Boolean> checkHealth();
 }

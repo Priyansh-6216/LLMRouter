@@ -134,4 +134,17 @@ public class OpenAiAdapter implements ProviderAdapter {
         // gpt-4o-mini placeholder cost
         return (inputTokens * 0.00015 / 1000.0) + (outputTokens * 0.0006 / 1000.0);
     }
+
+    @Override
+    public Mono<Boolean> checkHealth() {
+        return openAiWebClient.get()
+                .uri("/models")
+                .retrieve()
+                .toBodilessEntity()
+                .map(entity -> entity.getStatusCode().is2xxSuccessful())
+                .onErrorResume(e -> {
+                    log.warn("OpenAI health check failed: {}", e.getMessage());
+                    return Mono.just(false);
+                });
+    }
 }

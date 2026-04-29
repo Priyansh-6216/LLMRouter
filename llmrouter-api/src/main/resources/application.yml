@@ -33,3 +33,34 @@ vllm:
     key: ${VLLM_API_KEY:}
     url: ${VLLM_BASE_URL:http://localhost:8000/v1}
     model: ${VLLM_MODEL_NAME:meta-llama/Llama-3-8B-Instruct}
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+    instances:
+      openai:
+        baseConfig: default
+      anthropic:
+        baseConfig: default
+      vllm:
+        baseConfig: default
+  retry:
+    configs:
+      default:
+        maxAttempts: 2
+        waitDuration: 500ms
+    instances:
+      openai:
+        baseConfig: default
+      anthropic:
+        baseConfig: default
+      vllm:
+        baseConfig: default
