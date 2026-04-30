@@ -36,10 +36,10 @@ public class OpenAiAdapter implements ProviderAdapter {
     }
 
     @Override
-    public Mono<GenerateResponse> generate(GenerateRequest request) {
+    public Mono<GenerateResponse> generate(GenerateRequest request, String model) {
         long startTime = System.currentTimeMillis();
 
-        OpenAiRequest openAiRequest = toOpenAiRequest(request, false);
+        OpenAiRequest openAiRequest = toOpenAiRequest(request, model, false);
 
         return openAiWebClient.post()
                 .uri("/chat/completions")
@@ -50,8 +50,8 @@ public class OpenAiAdapter implements ProviderAdapter {
     }
 
     @Override
-    public Flux<String> generateStream(GenerateRequest request) {
-        OpenAiRequest openAiRequest = toOpenAiRequest(request, true);
+    public Flux<String> generateStream(GenerateRequest request, String model) {
+        OpenAiRequest openAiRequest = toOpenAiRequest(request, model, true);
         String reqId = "req_" + UUID.randomUUID().toString().substring(0, 8);
 
         return openAiWebClient.post()
@@ -77,7 +77,7 @@ public class OpenAiAdapter implements ProviderAdapter {
                         }
                         
                         String escapedText = text.replace("\"", "\\\"").replace("\n", "\\n");
-                        String out = "data: {\"id\":\"" + reqId + "\",\"chunk\":\"" + escapedText + "\",\"provider\":\"" + PROVIDER_NAME + "\",\"model\":\"" + DEFAULT_MODEL + "\",\"done\":" + done + "}\n\n";
+                        String out = "data: {\"id\":\"" + reqId + "\",\"chunk\":\"" + escapedText + "\",\"provider\":\"" + PROVIDER_NAME + "\",\"model\":\"" + model + "\",\"done\":" + done + "}\n\n";
                         return out;
                     } catch (JsonProcessingException e) {
                         log.error("Failed to parse chunk", e);
@@ -86,9 +86,9 @@ public class OpenAiAdapter implements ProviderAdapter {
                 });
     }
 
-    private OpenAiRequest toOpenAiRequest(GenerateRequest request, boolean stream) {
+    private OpenAiRequest toOpenAiRequest(GenerateRequest request, String model, boolean stream) {
         return OpenAiRequest.builder()
-                .model(DEFAULT_MODEL) // For Day 3, we hardcode. Later the routing engine will provide this.
+                .model(model != null ? model : DEFAULT_MODEL) 
                 .stream(stream)
                 .messages(request.getMessages().stream()
                         .map(m -> OpenAiRequest.Message.builder()

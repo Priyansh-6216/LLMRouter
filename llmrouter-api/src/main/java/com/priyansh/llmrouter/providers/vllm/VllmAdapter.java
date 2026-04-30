@@ -38,10 +38,10 @@ public class VllmAdapter implements ProviderAdapter {
     }
 
     @Override
-    public Mono<GenerateResponse> generate(GenerateRequest request) {
+    public Mono<GenerateResponse> generate(GenerateRequest request, String model) {
         long startTime = System.currentTimeMillis();
 
-        VllmRequest vllmRequest = toVllmRequest(request, false);
+        VllmRequest vllmRequest = toVllmRequest(request, model, false);
 
         return vllmWebClient.post()
                 .uri("/chat/completions")
@@ -52,8 +52,8 @@ public class VllmAdapter implements ProviderAdapter {
     }
 
     @Override
-    public Flux<String> generateStream(GenerateRequest request) {
-        VllmRequest vllmRequest = toVllmRequest(request, true);
+    public Flux<String> generateStream(GenerateRequest request, String model) {
+        VllmRequest vllmRequest = toVllmRequest(request, model, true);
         String reqId = "req_" + UUID.randomUUID().toString().substring(0, 8);
 
         return vllmWebClient.post()
@@ -81,7 +81,7 @@ public class VllmAdapter implements ProviderAdapter {
                         }
                         
                         String escapedText = text.replace("\"", "\\\"").replace("\n", "\\n");
-                        String out = "data: {\"id\":\"" + reqId + "\",\"chunk\":\"" + escapedText + "\",\"provider\":\"" + PROVIDER_NAME + "\",\"model\":\"" + defaultModel + "\",\"done\":" + done + "}\n\n";
+                        String out = "data: {\"id\":\"" + reqId + "\",\"chunk\":\"" + escapedText + "\",\"provider\":\"" + PROVIDER_NAME + "\",\"model\":\"" + model + "\",\"done\":" + done + "}\n\n";
                         return out;
                     } catch (JsonProcessingException e) {
                         log.error("Failed to parse vLLM chunk: {}", chunk, e);
@@ -90,9 +90,9 @@ public class VllmAdapter implements ProviderAdapter {
                 });
     }
 
-    private VllmRequest toVllmRequest(GenerateRequest request, boolean stream) {
+    private VllmRequest toVllmRequest(GenerateRequest request, String model, boolean stream) {
         return VllmRequest.builder()
-                .model(defaultModel)
+                .model(model != null ? model : defaultModel)
                 .stream(stream)
                 .messages(request.getMessages().stream()
                         .map(m -> VllmRequest.Message.builder()

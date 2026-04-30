@@ -15,12 +15,12 @@ public interface ProviderAdapter {
     /**
      * Execute a blocking inference request.
      */
-    Mono<GenerateResponse> generate(GenerateRequest request);
+    Mono<GenerateResponse> generate(GenerateRequest request, String model);
 
     /**
      * Execute a streaming inference request.
      */
-    Flux<String> generateStream(GenerateRequest request);
+    Flux<String> generateStream(GenerateRequest request, String model);
 
     /**
      * Check if the provider is healthy and reachable.

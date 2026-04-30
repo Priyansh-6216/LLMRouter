@@ -34,7 +34,7 @@ public class ExecutionService {
         ProviderAdapter adapter = getAdapter(provider);
         long startTime = System.currentTimeMillis();
 
-        return adapter.generate(request)
+        return adapter.generate(request, currentModel.getModelName())
                 .transformDeferred(CircuitBreakerOperator.of(circuitBreakerRegistry.circuitBreaker(provider)))
                 .transformDeferred(RetryOperator.of(retryRegistry.retry(provider)))
                 .doOnSuccess(res -> {
@@ -69,7 +69,7 @@ public class ExecutionService {
         ProviderAdapter adapter = getAdapter(provider);
         long startTime = System.currentTimeMillis();
 
-        return adapter.generateStream(request)
+        return adapter.generateStream(request, currentModel.getModelName())
                 .transformDeferred(CircuitBreakerOperator.of(circuitBreakerRegistry.circuitBreaker(provider)))
                 .doOnComplete(() -> {
                     long latency = System.currentTimeMillis() - startTime;

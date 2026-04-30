@@ -37,10 +37,10 @@ public class AnthropicAdapter implements ProviderAdapter {
     }
 
     @Override
-    public Mono<GenerateResponse> generate(GenerateRequest request) {
+    public Mono<GenerateResponse> generate(GenerateRequest request, String model) {
         long startTime = System.currentTimeMillis();
 
-        AnthropicRequest anthropicRequest = toAnthropicRequest(request, false);
+        AnthropicRequest anthropicRequest = toAnthropicRequest(request, model, false);
 
         return anthropicWebClient.post()
                 .uri("/messages")
@@ -51,8 +51,8 @@ public class AnthropicAdapter implements ProviderAdapter {
     }
 
     @Override
-    public Flux<String> generateStream(GenerateRequest request) {
-        AnthropicRequest anthropicRequest = toAnthropicRequest(request, true);
+    public Flux<String> generateStream(GenerateRequest request, String model) {
+        AnthropicRequest anthropicRequest = toAnthropicRequest(request, model, true);
         String reqId = "req_" + UUID.randomUUID().toString().substring(0, 8);
 
         return anthropicWebClient.post()
@@ -90,7 +90,7 @@ public class AnthropicAdapter implements ProviderAdapter {
                         }
 
                         String escapedText = text.replace("\"", "\\\"").replace("\n", "\\n");
-                        return "data: {\"id\":\"" + reqId + "\",\"chunk\":\"" + escapedText + "\",\"provider\":\"" + PROVIDER_NAME + "\",\"model\":\"" + DEFAULT_MODEL + "\",\"done\":" + done + "}\n\n";
+                        return "data: {\"id\":\"" + reqId + "\",\"chunk\":\"" + escapedText + "\",\"provider\":\"" + PROVIDER_NAME + "\",\"model\":\"" + model + "\",\"done\":" + done + "}\n\n";
                     } catch (JsonProcessingException e) {
                         log.error("Failed to parse anthropic chunk", e);
                         return "";
@@ -99,7 +99,7 @@ public class AnthropicAdapter implements ProviderAdapter {
                 .filter(s -> !s.isEmpty());
     }
 
-    private AnthropicRequest toAnthropicRequest(GenerateRequest request, boolean stream) {
+    private AnthropicRequest toAnthropicRequest(GenerateRequest request, String model, boolean stream) {
         // Extract system message
         String systemMessage = request.getMessages().stream()
                 .filter(m -> "system".equalsIgnoreCase(m.getRole()))
@@ -116,7 +116,7 @@ public class AnthropicAdapter implements ProviderAdapter {
                 .collect(Collectors.toList());
 
         return AnthropicRequest.builder()
-                .model(DEFAULT_MODEL)
+                .model(model != null ? model : DEFAULT_MODEL)
                 .max_tokens(4096)
                 .system(systemMessage)
                 .messages(messages)
