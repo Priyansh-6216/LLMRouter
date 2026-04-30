@@ -15,6 +15,7 @@ public interface RoutingEngine {
     class RoutingDecision {
         private ModelMetadata selectedModel;
         private List<ModelMetadata> fallbackChain;
+        private String routingPolicy;
         private List<String> reasons;
     }
 }

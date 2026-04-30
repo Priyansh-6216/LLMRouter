@@ -308,8 +308,8 @@ POST /v1/policies/route-preview
 - [x] Day 6: Routing engine + policy scoring
 - [x] Day 7: Redis cache + cache metrics
 - [x] Day 8: Fallback + circuit breaker + health checks
-- [ ] Day 9: Kafka events + PostgreSQL analytics
-- [ ] Day 10: Streaming endpoint + demo video + polished README
+- [x] Day 9: Kafka events + PostgreSQL analytics
+- [x] Day 10: Streaming endpoint + demo video + polished README
 
 ### 🔜 V2
 - [ ] Per-tenant rate limits and budget enforcement

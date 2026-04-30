@@ -37,6 +37,8 @@ public class DefaultRoutingEngine implements RoutingEngine {
         // Apply basic constraint filtering (e.g., context window)
         // For Day 6, we keep it simple
         
-        return strategy.route(request, candidates, registry);
+        RoutingEngine.RoutingDecision decision = strategy.route(request, candidates, registry);
+        decision.setRoutingPolicy(policyName);
+        return decision;
     }
 }
